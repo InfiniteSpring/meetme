@@ -11,6 +11,8 @@ from .config import ACCESS_TOKEN_EXPIRE_MINUTES, SECRET_KEY, ALGORITHM
 from .schemas import *
 from .service import *
 
+from .config import logger
+
 
 main_router = APIRouter(
     prefix="/users",
@@ -36,9 +38,9 @@ async def login_for_access_token(
     return Token(access_token=access_token, token_type="bearer")
 
 
-@main_router.get("/me", response_model=User)
+@main_router.get("/me", response_model=UserView)
 async def read_users_me(
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[UserView, Depends(get_current_active_user)],
 ):
     return current_user
 
@@ -62,7 +64,7 @@ async def create_user(
 
 
 @main_router.get("/all")
-async def get_all_users(current_user: Annotated[User, Depends(get_current_active_user)],):
+async def get_all_users():
     result = await get_all_users_service()
     return result
 
@@ -71,3 +73,20 @@ async def get_all_users(current_user: Annotated[User, Depends(get_current_active
 async def get_user_by_username(username:str):
     result = await get_user_by_username_service(username)
     return result
+
+
+@main_router.put('/update')
+async def update_one(
+    user: Annotated[UserCreate, Depends()]
+):
+    try:
+        result = await update_user_service(user=user)
+        return result
+    except Exception as e:
+        logger.error(f"{'-'*16}There was an error -> {e}")
+        return {
+            "success": False,
+            "details": {
+                "error": e
+            }
+        }

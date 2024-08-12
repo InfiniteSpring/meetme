@@ -1,6 +1,7 @@
-from sqlalchemy import select
+from sqlalchemy import select, update
+from sqlalchemy.orm import defer
 
-from .schemas import UserInDB, DBUser
+from .schemas import UserInDB, UserView
 from .models import User
 from .database import async_session
 
@@ -24,7 +25,7 @@ class UserRepository:
         cls
     ):
         async with async_session() as session:
-            query = select(User)
+            query = select(User).options(defer(User.hashed_password))
             result = await session.execute(query)
             user_models = result.scalars().all()
             return user_models
@@ -50,8 +51,26 @@ class UserRepository:
 
     
     @classmethod
-    async def change_user(user: UserInDB):
-        ...
+    async def change_user(
+        cls, 
+        user: UserInDB
+    ):
+        async with async_session() as session:
+            stmt = update(User).where(User.username == user.username)\
+                .values(
+                    username=user.username, 
+                    email=user.email,
+                    full_name=user.full_name,
+                    hashed_password=user.hashed_password,
+                    age=user.age,
+                    sex=user.sex,
+                    interests=user.interests,
+                    language=user.language,
+                    about=user.about
+                    )
+            await session.execute(stmt)
+            await session.commit()
+            return await cls.get_user_by_username(username=user.username)
 
     
     @classmethod

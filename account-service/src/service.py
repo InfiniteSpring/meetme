@@ -11,6 +11,7 @@ from .schemas import *
 from .config import ALGORITHM, SECRET_KEY
 from .repository import UserRepository
 
+from .config import logger
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -80,9 +81,15 @@ async def create_user_service(user: UserCreate) -> dict:
         hashed_password=get_password_hash(user.password),
         email=user.email,
         full_name=user.full_name,
-        disabled=user.disabled
+        age=user.age,
+        sex=user.sex,
+        interests=user.interests,
+        language=user.language,
+        about=user.about,
     )
     response = await UserRepository.create_user(user=user_with_hashed_pass)
+
+    print("check is it work")
 
     return {
         "success": True if response is not Exception else False,
@@ -92,6 +99,7 @@ async def create_user_service(user: UserCreate) -> dict:
 
 async def get_all_users_service():
     result = await UserRepository.get_all_users()
+    logger.debug(f"there is some debug info for getting all users\n{'-'*50}")
     return result
 
 
@@ -100,3 +108,24 @@ async def get_user_by_username_service(username: str):
     # del result["hashed_password"]
     return result
 
+
+async def update_user_service(
+        user: UserCreate
+        ):
+    user_with_hashed_pass = UserInDB(
+        username=user.username,
+        hashed_password=get_password_hash(user.password),
+        email=user.email,
+        full_name=user.full_name,
+        age=user.age,
+        sex=user.sex,
+        interests=user.interests,
+        language=user.language,
+        about=user.about,
+    )
+    response = await UserRepository.change_user(user=user_with_hashed_pass)
+
+    return {
+        "success": True if response is not Exception else False,
+        "details": response
+    }

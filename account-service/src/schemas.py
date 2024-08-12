@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class Token(BaseModel):
@@ -17,9 +18,30 @@ class TokenData(BaseModel):
 
 class User(BaseModel):
     username: str
-    email: str | None = None
+    email: str
     full_name: str | None = None
-    disabled: bool = False
+    age: int | None = None
+    sex: str | None = None
+    interests: str | None = None
+    language: str | None = None
+    about: str | None = None
+
+
+class UserCreate(BaseModel):
+    username: str
+    email: str
+    password: str
+    full_name: str | None = None
+    age: int | None = None
+    sex: str | None = None
+    interests: str | None = None
+    language: str | None = None
+    about: str | None = None
+
+
+class UserView(User):
+    disabled: bool
+    rating: int
 
 
 class UserInDB(User):
@@ -28,8 +50,4 @@ class UserInDB(User):
 
 class DBUser(UserInDB):
     id: int
-
-
-class UserCreate(User):
-    password: str
 
