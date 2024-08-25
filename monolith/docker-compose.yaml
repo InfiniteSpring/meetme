@@ -1,0 +1,13 @@
+version: 'latest'
+
+services:
+  app:
+    container_name: meetme-back-monolith
+    build: ./
+    command: bash -c 'uvicorn src.main:app --host 127.0.0.1 --port 8000'
+    volumes:
+      - ./src:/src/src
+    network_mode: "host"
+    restart: always
+    env_file:
+      - .env
