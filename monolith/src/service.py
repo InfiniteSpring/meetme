@@ -97,7 +97,7 @@ async def create_user_service(user: UserCreate) -> dict:
 
 async def get_all_users_service():
     result = await UserRepository.get_all_users()
-    logger.debug(f"there is some debug info for getting all users\n{'-'*50}")
+    logger.debug(f"\n{'-'*50}\nthere is some debug info for getting all users\n{'-'*50}")
     return result
 
 

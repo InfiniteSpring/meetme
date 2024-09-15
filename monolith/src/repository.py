@@ -34,6 +34,7 @@ class UserRepository:
     ):
         async with async_session() as session:
             query = select(User).options(defer(User.hashed_password))
+            # query = select(User)
             result = await session.execute(query)
             user_models = result.scalars().all()
             return user_models

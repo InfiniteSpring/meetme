@@ -10,7 +10,7 @@ from .router import main_router
 async def lifespan(app: FastAPI):
     print("server start working")
     async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
+        # await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
     print("db is ready to use")
     yield

@@ -77,10 +77,11 @@ async def get_user_by_username(username:str):
 
 @main_router.put('/update')
 async def update_one(
-    user: Annotated[UserCreate, Depends()]
+    current_user: Annotated[UserCreate, Depends(get_current_active_user)],
+    # user: Annotated[UserCreate, Depends()]
 ):
     try:
-        result = await update_user_service(user=user)
+        result = await update_user_service(user=current_user)
         return result
     except Exception as e:
         logger.error(f"{'-'*16}There was an error -> {e}")

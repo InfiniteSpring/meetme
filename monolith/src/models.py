@@ -22,17 +22,17 @@ class User(Base):
     rating = Column('rating', Integer, default=0)
     created_at = Column('created_at', DateTime, default=datetime.now)
     disabled = Column('disabled', Boolean, default=False)
-    posts: Mapped[Optional[List["Post"]]] = relationship(back_populates="user", cascade="all, delete")
+    # posts: Mapped[Optional[List["Post"]]] = relationship(back_populates="user", cascade="all, delete")
 
 
-class Post(Base):
-    __tablename__ = "posts"
+# class Post(Base):
+#     __tablename__ = "posts"
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
-    text: Mapped[str] = String(4096)
-    rating = Column("rating", Integer, default=0)
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE"))
-    user: Mapped["User"] = relationship(back_populates="user_posts", cascade="all, delete")
+#     id: Mapped[int] = mapped_column(primary_key=True, index=True, autoincrement=True)
+#     text: Mapped[str] = String(4096)
+#     rating = Column("rating", Integer, default=0)
+#     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE", onupdate="CASCADE"))
+#     user: Mapped["User"] = relationship(back_populates="user_posts", cascade="all, delete")
 
 
 # class UserComment(Base):
