@@ -8,6 +8,7 @@ from .database import async_session
 
 class UserRepository:
 
+
     @classmethod
     async def get_user_by_username(
         cls, 
@@ -19,6 +20,7 @@ class UserRepository:
             result_model = result.scalars().first()
             return result_model
 
+
     @classmethod
     async def get_created_date_by_id(
         cls, user_id: int
@@ -27,6 +29,7 @@ class UserRepository:
             query = select(User.created_at).where(User.id==user_id)
             result = await session.execute(query)
             return result.scalars().first()
+
 
     @classmethod
     async def get_all_users(
@@ -38,7 +41,6 @@ class UserRepository:
             result = await session.execute(query)
             user_models = result.scalars().all()
             return user_models
-
 
     
     @classmethod
@@ -57,11 +59,10 @@ class UserRepository:
             except Exception as e:
                 return e
 
-
     
     @classmethod
     async def change_user(
-        cls, 
+        cls,
         user: UserInDB
     ):
         async with async_session() as session:
@@ -81,7 +82,7 @@ class UserRepository:
             await session.commit()
             return await cls.get_user_by_username(username=user.username)
 
-    
+
     @classmethod
     async def delete_user(user_id: int):
         ...
